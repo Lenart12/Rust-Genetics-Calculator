@@ -13,6 +13,10 @@
     font-weight: bold;
 }
 
+a:hover{
+    text-decoration: none;
+}
+
 hr{
     border-color: #a1a09f;
 }

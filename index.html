@@ -49,11 +49,13 @@
         <div class="row mt-5">
             <div class="col-md-10 offset-md-1 text-center">
                 <h1>
-                    <span class="rust p-2">Rust Genetics Calculator</span>
+                    <a href="#calculator">
+                        <span class="rust p-2">Rust Genetics Calculator</span>
+                    </a>
                 </h1>
                 <br>
                 <hr>
-                <span class="badge badge-pill badge-info">New: Delete crops individually</span>
+                <span class="badge badge-pill badge-info">New: Delete crops individually and optimized solving algortihm (faster and more responsive)</span>
                 <hr>
             </div>
         </div>
@@ -87,7 +89,7 @@
                 <hr>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="calculator">
             <div class="col-md-5 offset-md-1 bg-panel p-3">
                 <form id="add-form" onsubmit="addCrop(); return false;">
                     <input class="bg-panel" type="text" id="add-crop" pattern="^[YGHWXyghwx]{6}$" placeholder="Enter a new crop (eg. YGHWXG)">

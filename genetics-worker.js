@@ -1,3 +1,11 @@
+// Gene value enum
+const W = 0;
+const X = 1;
+const Y = 2;
+const G = 3;
+const H = 4;
+const U = 5;
+
 // Function to calculate the worth of the crop depending on its genes - simple one for now could be improved
 function evaluateCrop(crop, y_priority, g_priority, h_priority){
     let value = 0;
@@ -5,13 +13,13 @@ function evaluateCrop(crop, y_priority, g_priority, h_priority){
     // For each of the 6 genes
     for(let i = 0; i < 6; i++){
         // Evaluate each gene
-        switch(crop.charAt(i)){
-            case 'W':
-            case 'X': value -= 1; break;
-            case 'Y': value += y_priority; break;
-            case 'G': value += g_priority; break;
-            case 'H': value += h_priority; break;
-            case '?': value += 0; break;
+        switch(crop[i]){
+            case W:
+            case X: value -= 1; break;
+            case Y: value += y_priority; break;
+            case G: value += g_priority; break;
+            case H: value += h_priority; break;
+            case U: value += 0; break;
         }        
     }
     return value;
@@ -62,47 +70,78 @@ function* bwPowerSet(originalSet, maxDepth = -1) {
 
 // Crossbreeding function that takes an array of parent crops and calculates the child
 function crossbreed(parents){
-    let child = ''
+    let child = new Uint8Array(6);
     // For each of the 6 genes
     for(let i = 0; i < 6; i++){
-        let gene_table = {
-            'W' : 0,
-            'X' : 0,
-            'Y' : 0,
-            'G' : 0,
-            'H' : 0
-        }
+        let gene_table = [0, 0, 0, 0, 0];
 
         // Add up all the parent genes at i-th gene
-        parents.forEach((parent) => {
-            let c = parent.charAt(i);
-            gene_table[c] += (c == 'X' || c == 'W') ? 1 : 0.6;
-        })
+        for(let p = 0; p < parents.length; p++){
+            let c = parents[p][i];
+            gene_table[c] += 0.6 + (c <= X) * 0.4;
+        }
 
         // Find the dominant one
-        let max_gene = '?'
+        let max_gene = U
         let max_crop_value = 0.6;
-        Object.keys(gene_table).forEach((gene) => {
+        for(let gene = 0; gene < 5; gene++){
             // Set new dominant gene if it is stronger or if it is equal in strength and is randomly better
             if(gene_table[gene] > max_crop_value || (gene_table[gene] == max_crop_value && gene_table[gene] > 0.6 && Math.random() < 0.5)  ){
                 max_gene = gene;
                 max_crop_value = gene_table[gene];
             }
-        });
+        }
 
         // Set it for the child
-        child += max_gene;
+        child[i] = max_gene;
     }
     return child;
+}
+
+// Function to convert a gene as a string to gene as Uint8Array
+function geneStringToArray(str){
+    let arr = new Uint8Array(6);
+    for(i = 0; i < 6; i++){
+        switch(str.charAt(i)){
+            case 'W': arr[i] = W; break;
+            case 'X': arr[i] = X; break;
+            case 'Y': arr[i] = Y; break;
+            case 'G': arr[i] = G; break;
+            case 'H': arr[i] = H; break;
+            case 'U': arr[i] = U; break;
+        }
+    }
+    return arr;
+}
+
+// Function to convert a gene as a Uint8Array to gene as string
+function arrayToGeneString(arr){
+    let str = '';
+    for(i = 0; i < 6; i++){
+        switch(arr[i]){
+            case W: str += 'W'; break;
+            case X: str += 'X'; break;
+            case Y: str += 'Y'; break;
+            case G: str += 'G'; break;
+            case H: str += 'H'; break;
+            case U: str += '?'; break;
+        }
+    }
+    return str;
 }
 
 // Main calculation function
 async function calculate(workData) {
     // Find the best combination
+    let t1 = new Date().getTime();
     let max_crop_parents;
     let max_crop_value = -7;
     let max_crop;
     let min_crop_parents_length = undefined;
+
+    for(let i = 0; i < workData.genes.length; i++){
+        workData.genes[i] = geneStringToArray(workData.genes[i]);
+    }
     
     // For every possible combination
     for(parents of bwPowerSet(workData.genes, 8)){
@@ -120,6 +159,12 @@ async function calculate(workData) {
             max_crop = crop;
             min_crop_parents_length = parents.length;
         }
+    }
+
+    // Pack return value as strings
+    max_crop = arrayToGeneString(max_crop);
+    for(let i = 0; i < max_crop_parents.length; i++){
+        max_crop_parents[i] = arrayToGeneString(max_crop_parents[i]);
     }
 
     return {
