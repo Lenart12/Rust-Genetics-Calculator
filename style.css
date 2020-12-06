@@ -1,0 +1,68 @@
+
+.bg-panel{
+    background-color: #2B2E2E;
+}
+
+.gene{
+    display: inline-block;
+    color: #a1a09f;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+hr{
+    border-color: #a1a09f;
+}
+
+input[type=text]{
+    color: #a1a09f;
+    border: solid 1px white;
+}
+
+#crop-list{
+    list-style: none;
+    padding-left: 0;
+}
+
+.btn-del{
+    background-color: #5c5b5b;
+    padding: 0 0.2em;
+    margin-right: 1em;
+}
+
+.btn-del:hover{
+    background-color: #dc3545;
+}
+
+.good{
+    background-color: #577c1c;
+}
+
+.bad{
+    background-color: #9c4635;
+}
+
+.rust{
+    background-color: #ce422b;
+    color: #1e2020;
+    font-family: Rust;
+}
+
+@font-face{
+    font-family: rust;
+    src: url(Rust.ttf);
+}
+
+body{
+    height: 100vh;
+    font-family: 'Roboto', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 1.2em;
+    color: #f6eae0;
+    scrollbar-color: #f6eae0 #1e2020;
+    scrollbar-width: thin;
+}

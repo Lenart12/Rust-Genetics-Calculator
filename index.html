@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="LKoos">
+    <meta name="description" content="A simple genetics calculator for the plants of Rust">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@_LKoos">
+    <meta name="twitter:title" content="Rust Genetics Calculator">
+    <meta name="twitter:description" content="A simple genetics calculator for the plants of Rust">
+    <meta name="twitter:image" content="http://wigaun.eu.org/genetics/rust.jpg">
+
+    <title>Rust Genetics Calculator</title>
+
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+
+    <script data-ad-client="ca-pub-3095413067414263" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4M0K4X694H"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-4M0K4X694H');
+    </script>
+</head>
+<body class="bg-dark">
+    <div class="container-fluid">
+        <div class="row mt-5">
+            <div class="col-md-10 offset-md-1 text-center">
+                <h1>
+                    <span class="rust p-2">Rust Genetics Calculator</span>
+                </h1>
+                <br>
+                <hr>
+                <span class="badge badge-pill badge-info">New: Delete crops individually</span>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <h2>
+                    <p>
+                        How to use
+                    <button class="btn btn-secondary d-inline-block" type="button" data-toggle="collapse" data-target="#howtouse" aria-expanded="false"
+                            aria-controls="howtouse">
+                        Show
+                    </button>
+                </p>
+                </h2>
+                <div class="collapse" id="howtouse">
+                    Using the calculator is easy. Enter your crop genes in the text box below as a string of letters
+                    (eg. if your crops has <span class="good gene">Y</span>
+                                           <span class="good gene">G</span>
+                                           <span class="good gene">H</span>
+                                           <span class="bad gene">W</span>
+                                           <span class="bad gene">X</span>
+                                           <span class="good gene">G</span> genes, you would enter YGHWXG) and press enter.
+                    The calculator will automatically find the best possible combination of the current entered crops. <br><br>
+                    If you want you could also change the preference of what genes you would like to get. Default priorities
+                    are set for temperate biomes, so if you live in a cold biome, make sure to increase <span class="good gene">H</span> priority.
+                    Click here if you would like to learn more about <a href="#genes">genes</a> or <a href="#crossbreeding">crossbreeding</a>. <br><br>
+                    The result of the calculation will apear next to where you entered your crops. It will display what crops you need to crossbreed
+                    and what you will get. If you see results with <span class="good gene">?</span> genes, it means that no crossbreeding will occur for
+                    that gene.
+                </div>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 offset-md-1 bg-panel p-3">
+                <form id="add-form" onsubmit="addCrop(); return false;">
+                    <input class="bg-panel" type="text" id="add-crop" pattern="^[YGHWXyghwx]{6}$" placeholder="Enter a new crop (eg. YGHWXG)">
+                    <button type="submit" class="btn btn-success good">Add crop</button>
+                </form>
+                <hr>
+                <h3>Gene priority</h3>
+                <p>Used when evaluating each cross-breeding outcome</p>
+                <form>
+                    <label for="y-priority"><span class="good gene">Y</span> priority</label>
+                    <input type="range" id="y-priority" min="0" max="1" step="0.1" onchange="y_priority = parseFloat(document.getElementById('y-priority').value); calculateBest()" value="0.5"><br>
+
+                    <label for="g-priority"><span class="good gene">G</span> priority</label>
+                    <input type="range" id="g-priority" min="0" max="1" step="0.1" onchange="g_priority = parseFloat(document.getElementById('g-priority').value); calculateBest()" value="0.5"><br>
+
+                    <label for="h-priority"><span class="good gene">H</span> priority</label>
+                    <input type="range" id="h-priority" min="0" max="1" step="0.1" onchange="h_priority = parseFloat(document.getElementById('h-priority').value); calculateBest()" value="0"><br>
+
+                </form>
+                <div id="my-crops" hidden>
+                    <hr>
+                    <h3 class="d-inline-block">My crops</h3>
+                    <button type="button" class="btn btn-del mb-2 ml-3" onclick="if(confirm('Are you sure you want to clear all current crops'))clearCrops()">Clear</button>
+                    <ul id="crop-list" class="mt-2">
+    
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-5 bg-panel p-3">
+                <div id="calculation">
+
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <hr>
+                <h2 id="genes">Genes</h2>
+                <p class="lead">
+                    Every plant has 6 genes. Currently there are 5 different gene types that a plant can have.
+                    Genes alter the plant behaviour depending on the type and amount. The type of the 6 genes can be
+                    changed with cross-breeding. The best gene if you are not in the winter biome is any combination of 3
+                    <span class="good gene">G</span> and 3 <span class="good gene">Y</span> genes.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 offset-md-1 bg-panel p-3">
+                <span class="good gene">Y</span> Increases crop <span class="good">production amount</span> <span class="small">(yield)</span> <br>
+                <span class="good gene">G</span> Increases crop <span class="good">growth rate</span>  <br>
+                <span class="good gene">H</span> Increases crop <span class="good">cold resistance</span>  <br>
+            </div>
+            <div class="col-md-5 bg-panel p-3">
+                <span class="bad gene">W</span> Increases <span class="bad">water usage</span>  <br>
+                <span class="bad gene">X</span> Is bad
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1">
+                <hr>
+                <h2 id="crossbreeding">Crossbreeding</h2>
+                <p>
+                    About 20 minutes after planting every crop will enter a crossbreading stage. When it enteres this stage, the plant will look
+                    at its <strong>neighbour plants in the planter</strong> (not including itself) for any genes that it can recive.
+                    The crossbreading stage will also be indicated when looking at the plant under the stage category.
+                </p>
+                <p>
+                    If you are interesed in a detailed explanation of crossbreeding i sugest watching <a href="https://www.youtube.com/watch?v=WQ0ixceBZwA">this video</a>
+                    (or look at the source code 😉),
+                    but in short when crossbreeding occurs, the crop will go looking for each of the six genes of neighbours and
+                    select the one that was found the most times for that position (with negative ones taking priority). If all genes
+                    had the same amount of occurances, no crossbreading will occur for that gene.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1 text-center my-3 ">
+                <hr>
+                <form action="https://www.paypal.com/donate" method="post" target="_top">
+                    <input type="hidden" name="hosted_button_id" value="7ZLM6BKXDEG5A" />
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                    <img alt="" border="0" src="https://www.paypal.com/en_SI/i/scr/pixel.gif" width="1" height="1" />
+                </form>
+                Made by <a href="https://steamcommunity.com/id/LKoos/">LKoos</a> © 2020 - <a href="/">Homepage</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
