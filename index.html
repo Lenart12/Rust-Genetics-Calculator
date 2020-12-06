@@ -29,7 +29,9 @@
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
+
     <script src="script.js"></script>
+    <!-- <script src="genetics-worker.js"></script> -->
 
     <script data-ad-client="ca-pub-3095413067414263" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -115,6 +117,35 @@
                 </div>
             </div>
             <div class="col-md-5 bg-panel p-3">
+                <div class="text-center pt-5" id="calc-loading" hidden>
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                       width="60px" height="75px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                      <rect x="0" y="13" width="4" height="5" fill="#333">
+                        <animate attributeName="height" attributeType="XML"
+                          values="5;21;5" 
+                          begin="0s" dur="0.6s" repeatCount="indefinite" />
+                        <animate attributeName="y" attributeType="XML"
+                          values="13; 5; 13"
+                          begin="0s" dur="0.6s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="10" y="13" width="4" height="5" fill="#333">
+                        <animate attributeName="height" attributeType="XML"
+                          values="5;21;5" 
+                          begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                        <animate attributeName="y" attributeType="XML"
+                          values="13; 5; 13"
+                          begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                      </rect>
+                      <rect x="20" y="13" width="4" height="5" fill="#333">
+                        <animate attributeName="height" attributeType="XML"
+                          values="5;21;5" 
+                          begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                        <animate attributeName="y" attributeType="XML"
+                          values="13; 5; 13"
+                          begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                      </rect>
+                    </svg>
+                </div>
                 <div id="calculation">
 
                 </div>
@@ -153,8 +184,8 @@
                     The crossbreading stage will also be indicated when looking at the plant under the stage category.
                 </p>
                 <p>
-                    If you are interesed in a detailed explanation of crossbreeding i sugest watching <a href="https://www.youtube.com/watch?v=WQ0ixceBZwA">this video</a>
-                    (or look at the source code 😉),
+                    If you are interesed in a detailed explanation of crossbreeding I sugest watching <a href="https://www.youtube.com/watch?v=WQ0ixceBZwA">this video</a>
+                    (or look at the source code on <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a>),
                     but in short when crossbreeding occurs, the crop will go looking for each of the six genes of neighbours and
                     select the one that was found the most times for that position (with negative ones taking priority). If all genes
                     had the same amount of occurances, no crossbreading will occur for that gene.
@@ -169,7 +200,7 @@
                     <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
                     <img alt="" border="0" src="https://www.paypal.com/en_SI/i/scr/pixel.gif" width="1" height="1" />
                 </form>
-                Made by <a href="https://steamcommunity.com/id/LKoos/">LKoos</a> © 2020 - <a href="/">Homepage</a>
+                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2020 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a>
             </div>
         </div>
     </div>

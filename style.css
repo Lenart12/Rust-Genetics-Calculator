@@ -17,6 +17,10 @@ hr{
     border-color: #a1a09f;
 }
 
+rect {
+  fill: #ce422b;
+}
+
 input[type=text]{
     color: #a1a09f;
     border: solid 1px white;
