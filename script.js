@@ -78,9 +78,9 @@ function addCrop(updateCalc = true){
         // I am interested if this is even being used and what is the statistics of plants being calculated, hope
         // you don't mind if I store these crops in a database. DM me if you are interested getting the data.
         // I am doing this for free so I would ask you kindly not to abuse this endpoint by sending bullshit data. Thanks
-        // let http = new XMLHttpRequest()
-        // http.open('GET', 'statistics.php?genes=' + crop);
-        // http.send();
+        let http = new XMLHttpRequest()
+        http.open('GET', 'statistics.php?genes=' + crop);
+        http.send();
     }
     else{
         return false;
