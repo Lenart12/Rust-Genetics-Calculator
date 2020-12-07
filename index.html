@@ -53,9 +53,6 @@
                         <span class="rust p-2">Rust Genetics Calculator</span>
                     </a>
                 </h1>
-                <br>
-                <hr>
-                <span class="badge badge-pill badge-info">New: Delete crops individually and optimized solving algortihm (faster and more responsive)</span>
                 <hr>
             </div>
         </div>
@@ -192,16 +189,41 @@
                     select the one that was found the most times for that position (with negative ones taking priority). If all genes
                     had the same amount of occurances, no crossbreading will occur for that gene.
                 </p>
+                <hr>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-10 offset-md-1 text-center my-3 ">
+            <div class="col-md-10 offset-md-1 text-center">
+                <p>
+                    <a class="btn btn-primary" id="btn-feedback" data-toggle="collapse" href="#feedbackCollapse" aria-expanded="false" aria-controls="feedbackCollapse">
+                        Leave feedback
+                    </a>
+                </p>
+                <div class="collapse" id="feedbackCollapse">
+                    <form id="feedback-form" onsubmit="feedback(); return false;">
+                        <div class="form-group">
+                          <label for="text">Feedback</label>
+                          <textarea class="form-control" name="text" id="text" rows="6" placeholder="Your feedback content" required></textarea>
+                        </div>
+                        <div class="form-group">
+                          <label for="contact">Your contact</label>
+                          <input type="email" class="form-control" name="contact" id="contact" aria-describedby="emailHelpId" placeholder="Contact email (optional)">
+                          <small id="emailHelpId" class="form-text text-muted">If you prefer other method of communicaton mention it in the feedback content</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-10 offset-md-1 text-center mb-3 ">
                 <hr>
                 <form action="https://www.paypal.com/donate" method="post" target="_top">
                     <input type="hidden" name="hosted_button_id" value="7ZLM6BKXDEG5A" />
                     <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
                     <img alt="" border="0" src="https://www.paypal.com/en_SI/i/scr/pixel.gif" width="1" height="1" />
                 </form>
+                <small class="text-muted">Special thanks to Clark for his support!</small><br>
                 Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2020 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a>
             </div>
         </div>

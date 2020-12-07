@@ -58,6 +58,23 @@ function createElement(parent, type, text, classList){
     return el;
 }
 
+// Feedback form callback
+function feedback() {
+    let text = document.getElementById('text').value;
+    let contact = document.getElementById('contact').value;
+    
+    let http = new XMLHttpRequest()
+    let url = 'feedback.php?text=' + encodeURIComponent(text) + '&contact=' + encodeURIComponent(contact);
+    http.open('GET', url);
+    http.send();
+
+    document.getElementById('feedback-form').reset();
+    $('#feedbackCollapse').collapse('hide')
+    let btn = document.getElementById('btn-feedback');
+    btn.textContent = 'Thank you';
+    btn.classList = 'btn btn-success';
+}
+
 // Form callback function which handles adding of a new crop
 function addCrop(updateCalc = true){
     let add_crop = document.getElementById('add-crop');
