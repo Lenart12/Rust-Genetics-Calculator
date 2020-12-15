@@ -211,7 +211,6 @@ function processWorkerMessage(e){
         createElement(calculation_div, 'h3', 'Best crop is', '');
         for(let i = 0; i < 6; i++){
             let g = e.data.max_crop[i];
-            console.log(g)
             let bad = []
             let good = []
             if((g & W) > 0) bad.push('W');

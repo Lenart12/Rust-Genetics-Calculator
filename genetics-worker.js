@@ -34,6 +34,7 @@ function evaluateCrop(crop, y_priority, g_priority, h_priority){
             g = g & (g - 1);
             n++;
         }
+        n = (n < 1) ? 1 : 0;
         value -= 0.1 * (n - 1);
     }
     return value;

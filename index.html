@@ -97,13 +97,13 @@
                 <p>Used when evaluating each cross-breeding outcome</p>
                 <form>
                     <label for="y-priority"><span class="good gene">Y</span> priority</label>
-                    <input type="range" id="y-priority" min="0" max="1" step="0.1" onchange="y_priority = parseFloat(document.getElementById('y-priority').value); calculateBest()" value="0.5"><br>
+                    <input type="range" id="y-priority" min="0.01" max="1" step="0.01" onchange="y_priority = parseFloat(document.getElementById('y-priority').value); calculateBest()" value="0.5"><br>
 
                     <label for="g-priority"><span class="good gene">G</span> priority</label>
-                    <input type="range" id="g-priority" min="0" max="1" step="0.1" onchange="g_priority = parseFloat(document.getElementById('g-priority').value); calculateBest()" value="0.5"><br>
+                    <input type="range" id="g-priority" min="0.01" max="1" step="0.01" onchange="g_priority = parseFloat(document.getElementById('g-priority').value); calculateBest()" value="0.5"><br>
 
                     <label for="h-priority"><span class="good gene">H</span> priority</label>
-                    <input type="range" id="h-priority" min="0" max="1" step="0.1" onchange="h_priority = parseFloat(document.getElementById('h-priority').value); calculateBest()" value="0"><br>
+                    <input type="range" id="h-priority" min="0.01" max="1" step="0.01" onchange="h_priority = parseFloat(document.getElementById('h-priority').value); calculateBest()" value="0.01"><br>
 
                 </form>
                 <div id="my-crops" hidden>
