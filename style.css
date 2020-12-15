@@ -7,10 +7,24 @@
     display: inline-block;
     color: #a1a09f;
     width: 2rem;
-    height: 2rem;
+    height: auto;
     border-radius: 1rem;
     text-align: center;
+    vertical-align: top;
     font-weight: bold;
+}
+
+.multi-gene{
+    width: 2rem;
+    display: inline-block;
+}
+
+.gene-border-nb{
+    border-radius: 1rem 1rem 0 0;
+}
+
+.gene-border-nt{
+    border-radius: 0 0 1rem 1rem;
 }
 
 a:hover{

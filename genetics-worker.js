@@ -1,10 +1,15 @@
 // Gene value enum
-const W = 0;
-const X = 1;
-const Y = 2;
-const G = 3;
-const H = 4;
-const U = 5;
+const U = 0 << 0;
+const W = 1 << 0;
+const X = 1 << 1;
+const Y = 1 << 2;
+const G = 1 << 3;
+const H = 1 << 4;
+
+// Good an bad gene bitmasks
+//             HGYXW
+const GOOD = 0b11100;
+const BAD  = 0b00011;
 
 // Function to calculate the worth of the crop depending on its genes - simple one for now could be improved
 function evaluateCrop(crop, y_priority, g_priority, h_priority){
@@ -13,14 +18,23 @@ function evaluateCrop(crop, y_priority, g_priority, h_priority){
     // For each of the 6 genes
     for(let i = 0; i < 6; i++){
         // Evaluate each gene
-        switch(crop[i]){
-            case W:
-            case X: value -= 1; break;
-            case Y: value += y_priority; break;
-            case G: value += g_priority; break;
-            case H: value += h_priority; break;
-            case U: value += 0; break;
-        }        
+        let g = crop[i];
+        if(g & BAD){
+            value -= 1;
+        }
+        value += Math.max(
+            (g & Y) > 0 ? y_priority : 0,
+            (g & G) > 0 ? g_priority : 0,
+            (g & H) > 0 ? h_priority : 0
+        );
+
+        // Add a penalty for multi-choice genes
+        let n = 0;
+        while(g != 0){
+            g = g & (g - 1);
+            n++;
+        }
+        value -= 0.1 * (n - 1);
     }
     return value;
 }
@@ -43,8 +57,8 @@ function* bwPowerSet(originalSet, maxDepth = -1) {
         const subSet = [];
 
         // Get the depth by counting the number of set bits
-        depth = 0;
-        depth_c = combinationIndex;
+        let depth = 0;
+        let depth_c = combinationIndex;
         while(depth_c != 0){
             depth_c = depth_c & (depth_c - 1);
             depth++;
@@ -74,21 +88,32 @@ function crossbreed(parents){
     // For each of the 6 genes
     for(let i = 0; i < 6; i++){
         let gene_table = [0, 0, 0, 0, 0];
+        let genes = [W, X, Y, G, H];
 
         // Add up all the parent genes at i-th gene
         for(let p = 0; p < parents.length; p++){
-            let c = parents[p][i];
-            gene_table[c] += 0.6 + (c <= X) * 0.4;
+            switch(parents[p][i]){
+                case W: gene_table[0] += 1; break;
+                case X: gene_table[1] += 1; break;
+                case Y: gene_table[2] += 0.6; break;
+                case G: gene_table[3] += 0.6; break;
+                case H: gene_table[4] += 0.6; break;
+                case U: break;
+            }  
         }
 
         // Find the dominant one
         let max_gene = U
         let max_crop_value = 0.6;
         for(let gene = 0; gene < 5; gene++){
-            // Set new dominant gene if it is stronger or if it is equal in strength and is randomly better
-            if(gene_table[gene] > max_crop_value || (gene_table[gene] == max_crop_value && gene_table[gene] > 0.6 && Math.random() < 0.5)  ){
-                max_gene = gene;
+            // Set new dominant gene if it is stronger
+            if(gene_table[gene] > max_crop_value){
+                max_gene = genes[gene];
                 max_crop_value = gene_table[gene];
+            }
+            // or add it if its equaly strong
+            else if( gene_table[gene] == max_crop_value){
+                max_gene |= genes[gene];
             }
         }
 
@@ -133,14 +158,20 @@ function arrayToGeneString(arr){
 // Main calculation function
 async function calculate(workData) {
     // Find the best combination
-    let t1 = new Date().getTime();
     let max_crop_parents;
     let max_crop_value = -7;
     let max_crop;
-    let min_crop_parents_length = undefined;
 
+    // Change the gene as a string to a Uint8Array,
+    // then use it to find the best seed in the input
     for(let i = 0; i < workData.genes.length; i++){
-        workData.genes[i] = geneStringToArray(workData.genes[i]);
+        let crop = workData.genes[i] = geneStringToArray(workData.genes[i]);
+        let value = evaluateCrop(crop, workData.y_priority, workData.g_priority, workData.h_priority);
+        if(value > max_crop_value){
+            max_crop_value = value;
+            max_crop_parents = [];
+            max_crop = crop;
+        }
     }
     
     // For every possible combination
@@ -153,16 +184,14 @@ async function calculate(workData) {
         // console.log(value);
     
         // Set better crop if it is better or if it is equal and has less parents
-        if(value > max_crop_value || (min_crop_parents_length !== undefined && value == max_crop_value && parents.length < min_crop_parents_length) ){
+        if(value > max_crop_value || (value == max_crop_value && parents.length < max_crop_parents.length) ){
             max_crop_value = value;
             max_crop_parents = parents;
             max_crop = crop;
-            min_crop_parents_length = parents.length;
         }
     }
 
     // Pack return value as strings
-    max_crop = arrayToGeneString(max_crop);
     for(let i = 0; i < max_crop_parents.length; i++){
         max_crop_parents[i] = arrayToGeneString(max_crop_parents[i]);
     }

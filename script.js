@@ -24,35 +24,45 @@ $(() => {
     worker = new Worker('genetics-worker.js');
     worker.onmessage = processWorkerMessage;
 
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHHHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH', true);
+    addCropByGene('WHHXGG');
+    addCropByGene('HHGHHH');
+    addCropByGene('HYHWHH');
+    addCropByGene('YHHHGH');
+    addCropByGene('YGGXHH');
+    addCropByGene('WHHXGG');
+    addCropByGene('HHGHHH');
+    addCropByGene('HYHWHH');
+    addCropByGene('YHHHGH');
+    addCropByGene('YGGXHH');
+    addCropByGene('WHHXGG');
+    addCropByGene('HHGHHH');
+    addCropByGene('YGGXHH');
+    addCropByGene('HYHWHH');
+    addCropByGene('YHHHGH');
+    addCropByGene('YGGXHH');
+    addCropByGene('WHHXGG');
+    addCropByGene('HHGHHH');
+    addCropByGene('HYHHHH');
+    addCropByGene('YHHHGH');
+    addCropByGene('YGGXHH', true);
+    // HHGHHH
+    // YHHHGH
+    // YGGXHH
+    // YHHHGH
+    //   =
+    // YHGHGH
     // 2318 ms
     // 1844 ms
+
+    // addCropByGene('HHYWGH');
+    // addCropByGene('XGHYHG');
+    // addCropByGene('HGYYGH', true);
 })
 
 // Helper function to dynamicaly create elements
 function createElement(parent, type, text, classList){
     let el = document.createElement(type);
-    el.innerText = text;
+    el.innerHTML = text;
     el.classList = classList;
     parent.appendChild(el);
     return el;
@@ -140,14 +150,27 @@ function clearCrops(){
     document.getElementById('calculation').innerHTML = '';
 };
 
+// Gene value enum
+const U = 0 << 0;
+const W = 1 << 0;
+const X = 1 << 1;
+const Y = 1 << 2;
+const G = 1 << 3;
+const H = 1 << 4;
+
+// Good an bad gene bitmasks
+//             HGYXW
+const GOOD = 0b11100;
+const BAD  = 0b00011;
+
 function processWorkerMessage(e){
     // Stop loading animation
     document.getElementById('calc-loading').hidden = true;
     document.getElementById('calculation').innerHTML = '';
     
     // If any good crossbreeding is found
+    let calculation_div = document.getElementById('calculation');
     if(e.data.max_crop_parents.length > 0){
-        let calculation_div = document.getElementById('calculation');
         
         // Display parents
         createElement(calculation_div, 'h3', 'Crossbreed these', '');
@@ -163,10 +186,32 @@ function processWorkerMessage(e){
         createElement(calculation_div, 'br', '', '');
         createElement(calculation_div, 'h3', 'to get', '');
         for(let i = 0; i < 6; i++){
+            let g = e.data.max_crop[i];
+            let bad = []
+            let good = []
+            if((g & W) > 0) bad.push('W');
+            if((g & X) > 0) bad.push('X');
+            if((g & Y) > 0) good.push('Y');
+            if((g & G) > 0) good.push('G');
+            if((g & H) > 0) good.push('H');
+
+            let gene_div = createElement(calculation_div, 'div', '', 'multi-gene mt-1');
+
+            if(bad.length > 0){
+                createElement(gene_div, 'span', bad.join('<br>'), 'bad gene' + ((good.length > 0) ? ' gene-border-nb' : ''));
+            }
+            if(good.length > 0){
+                createElement(gene_div, 'span', good.join('<br>'), 'good gene' + ((bad.length > 0) ? ' gene-border-nt' : ''));
+            }
+        }
+        createElement(calculation_div, 'br', '', '');
+    }
+    else if(e.data.max_crop != undefined){
+        createElement(calculation_div, 'h3', 'Best crop is', '');
+        for(let i = 0; i < 6; i++){
             let c = e.data.max_crop.charAt(i);
             createElement(calculation_div, 'span', c, ( (c == 'X' || c == 'W') ? 'bad' : 'good' ) + ' gene mt-1'  )
         }
-        createElement(calculation_div, 'br', '', '');
     }
 }
 

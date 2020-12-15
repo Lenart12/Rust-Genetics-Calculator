@@ -1,6 +1,7 @@
 <?php
-// Table for feedback
-/* CREATE TABLE `genetics`.`feedback` (
+/* 
+-- Create table
+CREATE TABLE `genetics`.`feedback` (
     `id` INT NOT NULL AUTO_INCREMENT ,
     `time` DATETIME NOT NULL ,
     `text` TEXT NOT NULL ,
