@@ -24,27 +24,27 @@ $(() => {
     worker = new Worker('genetics-worker.js');
     worker.onmessage = processWorkerMessage;
 
-    addCropByGene('WHHXGG');
-    addCropByGene('HHGHHH');
-    addCropByGene('HYHWHH');
-    addCropByGene('YHHHGH');
-    addCropByGene('YGGXHH');
-    addCropByGene('WHHXGG');
-    addCropByGene('HHGHHH');
-    addCropByGene('HYHWHH');
-    addCropByGene('YHHHGH');
-    addCropByGene('YGGXHH');
-    addCropByGene('WHHXGG');
-    addCropByGene('HHGHHH');
-    addCropByGene('YGGXHH');
-    addCropByGene('HYHWHH');
-    addCropByGene('YHHHGH');
-    addCropByGene('YGGXHH');
-    addCropByGene('WHHXGG');
-    addCropByGene('HHGHHH');
-    addCropByGene('HYHHHH');
-    addCropByGene('YHHHGH');
-    addCropByGene('YGGXHH', true);
+    // addCropByGene('WHHXGG');
+    // addCropByGene('HHGHHH');
+    // addCropByGene('HYHWHH');
+    // addCropByGene('YHHHGH');
+    // addCropByGene('YGGXHH');
+    // addCropByGene('WHHXGG');
+    // addCropByGene('HHGHHH');
+    // addCropByGene('HYHWHH');
+    // addCropByGene('YHHHGH');
+    // addCropByGene('YGGXHH');
+    // addCropByGene('WHHXGG');
+    // addCropByGene('HHGHHH');
+    // addCropByGene('YGGXHH');
+    // addCropByGene('HYHWHH');
+    // addCropByGene('YHHHGH');
+    // addCropByGene('YGGXHH');
+    // addCropByGene('WHHXGG');
+    // addCropByGene('HHGHHH');
+    // addCropByGene('HYHHHH');
+    // addCropByGene('YHHHGH');
+    // addCropByGene('YGGXHH', true);
     // HHGHHH
     // YHHHGH
     // YGGXHH
