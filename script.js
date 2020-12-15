@@ -194,6 +194,7 @@ function processWorkerMessage(e){
             if((g & Y) > 0) good.push('Y');
             if((g & G) > 0) good.push('G');
             if((g & H) > 0) good.push('H');
+            if(g == U) good.push('?');
 
             let gene_div = createElement(calculation_div, 'div', '', 'multi-gene mt-1');
 
@@ -209,8 +210,25 @@ function processWorkerMessage(e){
     else if(e.data.max_crop != undefined){
         createElement(calculation_div, 'h3', 'Best crop is', '');
         for(let i = 0; i < 6; i++){
-            let c = e.data.max_crop.charAt(i);
-            createElement(calculation_div, 'span', c, ( (c == 'X' || c == 'W') ? 'bad' : 'good' ) + ' gene mt-1'  )
+            let g = e.data.max_crop[i];
+            console.log(g)
+            let bad = []
+            let good = []
+            if((g & W) > 0) bad.push('W');
+            if((g & X) > 0) bad.push('X');
+            if((g & Y) > 0) good.push('Y');
+            if((g & G) > 0) good.push('G');
+            if((g & H) > 0) good.push('H');
+            if(g == U) good.push('?');
+
+            let gene_div = createElement(calculation_div, 'div', '', 'multi-gene mt-1');
+
+            if(bad.length > 0){
+                createElement(gene_div, 'span', bad.join('<br>'), 'bad gene' + ((good.length > 0) ? ' gene-border-nb' : ''));
+            }
+            if(good.length > 0){
+                createElement(gene_div, 'span', good.join('<br>'), 'good gene' + ((bad.length > 0) ? ' gene-border-nt' : ''));
+            }
         }
     }
 }
