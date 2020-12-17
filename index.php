@@ -213,7 +213,8 @@
                     <img alt="" border="0" src="https://www.paypal.com/en_SI/i/scr/pixel.gif" width="1" height="1" />
                 </form>
                 <small class="text-muted">Special thanks to Clark for his support!</small><br>
-                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2020 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a>
+                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2020 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a><br>
+                <small class="text-muted">By using this website you consent to using cookies on this site. The site also tracks parts of your http request and the seeds you enter.</small>
             </div>
         </div>
     </div>

@@ -8,10 +8,15 @@ USE `genetics`;
 CREATE TABLE `genes` (
   `GeneID` int(11) NOT NULL AUTO_INCREMENT,
   `Gene` varchar(6) NOT NULL,
+  `session` INT NULL,
   `time` TIMESTAMP NOT NULL
   PRIMARY KEY (`GeneID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `genes` ADD FOREIGN KEY (`session`) REFERENCES `pageviews`(`id`); 
 */
+
+session_start();
 
 // Save added gene in database
 if(count($_GET) == 1 && isset($_GET['genes']) && preg_match('/^[YGHWX]{6}$/', $_GET['genes'])){
@@ -20,11 +25,16 @@ if(count($_GET) == 1 && isset($_GET['genes']) && preg_match('/^[YGHWX]{6}$/', $_
         http_response_code(202); // HTTP: Accepted
         die();
     }
+  
     require_once("secret.php");
     $conn = new mysqli(...$cred);
-    $insert = $conn->prepare('INSERT INTO genes VALUES(NULL, ?, CURRENT_TIMESTAMP)');
-    $insert->bind_param('s', $_GET['genes']);
+    $insert = $conn->prepare('INSERT INTO `genes` (`GeneID`, `Gene`, `session`, `time`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP())');
+
+    $user_session = $_SESSION['user_session'] ?? NULL;
+    
+    $insert->bind_param('si', $_GET['genes'], $user_session);
     $insert->execute();
+
     http_response_code(200); // HTTP: Success
 }
 else{
