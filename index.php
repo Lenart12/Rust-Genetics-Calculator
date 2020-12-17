@@ -1,3 +1,4 @@
+<?php require_once("counter.php"); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,21 +27,9 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+        
     <link rel="stylesheet" href="style.css">
-
     <script src="script.js"></script>
-    <!-- <script src="genetics-worker.js"></script> -->
-
-    <script data-ad-client="ca-pub-3095413067414263" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4M0K4X694H"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-4M0K4X694H');
-    </script>
 </head>
 <body class="bg-dark">
     <div class="container-fluid">
