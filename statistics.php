@@ -33,7 +33,7 @@ if(count($_GET) == 1 && isset($_GET['genes']) && preg_match('/^[YGHWX]{6}$/', $_
     
     // If no user session try to guess it
     if($user_session == NULL){
-        $select = $conn->prepare("SELECT `id` FROM `pageviews` WHERE `time` > NOW() - INTERVAL 1 HOUR AND `ip` = ? AND `useragent` = ? ORDER BY `time` DESC LIMIT 1");
+        $select = $conn->prepare("SELECT `id` FROM `pageviews` WHERE `time` > NOW() - INTERVAL 3 HOUR AND `ip` = ? AND `useragent` = ? ORDER BY `time` DESC LIMIT 1");
         $ip = inet_pton( $_SERVER["REMOTE_ADDR"] );
         $ua = substr( htmlspecialchars( $_SERVER["HTTP_USER_AGENT"]  ), 0, 500);
         $select->bind_param('is', $ip, $ua);
