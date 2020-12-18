@@ -12,6 +12,7 @@ CREATE TABLE `genetics`.`pageviews` (
 */
 
 session_start();
+
 // Only track on session start
 if(!isset($_SESSION['user_session'])){
     require_once("secret.php");
