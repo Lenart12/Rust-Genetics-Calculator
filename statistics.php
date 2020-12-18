@@ -31,6 +31,20 @@ if(count($_GET) == 1 && isset($_GET['genes']) && preg_match('/^[YGHWX]{6}$/', $_
     $insert = $conn->prepare('INSERT INTO `genes` (`GeneID`, `Gene`, `session`, `time`) VALUES (NULL, ?, ?, CURRENT_TIMESTAMP())');
 
     $user_session = $_SESSION['user_session'] ?? NULL;
+
+    // If no user session try to guess it
+    if($user_session == NULL){
+        echo "NULL";
+        $select = $conn->prepare("SELECT `id` FROM `pageviews` WHERE `time` > NOW() - INTERVAL 1 HOUR AND `ip` = ? AND `useragent` = ? ORDER BY `time` DESC LIMIT 1");
+        $ip = inet_pton( $_SERVER["REMOTE_ADDR"] );
+        $ua = substr( htmlspecialchars( $_SERVER["HTTP_USER_AGENT"]  ), 0, 500);
+        $select->bind_param('is', $ip, $ua);
+        $select->execute();
+        $select->bind_result($user_session);
+        if($select->fetch()){
+            $_SESSION['user_session'] = $user_session;
+        }
+    }
     
     $insert->bind_param('si', $_GET['genes'], $user_session);
     $insert->execute();
