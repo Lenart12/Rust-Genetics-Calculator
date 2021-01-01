@@ -73,13 +73,8 @@ function feedback() {
     let text = document.getElementById('text').value;
     let contact = document.getElementById('contact').value;
     
-<<<<<<< Updated upstream
     let http = new XMLHttpRequest()
     let url = 'feedback.php?text=' + encodeURIComponent(text) + '&contact=' + encodeURIComponent(contact);
-=======
-    let http = new XMLHttpRequest();
-    let url = 'https://wgn.si/feedback.php?text=' + encodeURIComponent(text) + '&contact=' + encodeURIComponent(contact);
->>>>>>> Stashed changes
     http.open('GET', url);
     http.send();
 
@@ -110,13 +105,8 @@ function addCrop(updateCalc = true){
         // I am interested if this is even being used and what is the statistics of plants being calculated, hope
         // you don't mind if I store these crops in a database. DM me if you are interested getting the data.
         // I am doing this for free so I would ask you kindly not to abuse this endpoint by sending bullshit data. Thanks
-<<<<<<< Updated upstream
         let http = new XMLHttpRequest()
         http.open('GET', 'statistics.php?genes=' + crop);
-=======
-        let http = new XMLHttpRequest();
-        http.open('GET', 'https://wgn.si/genetics/statistics.php?genes=' + crop);
->>>>>>> Stashed changes
         http.send();
     }
     else{
