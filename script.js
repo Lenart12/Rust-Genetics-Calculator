@@ -1,12 +1,14 @@
-// B=============D ~~~~
-
 // Array to store all the entered crops
 let crops = {};
+
+// Current crop id
 let cid = -1;
+
 let y_priority;
 let g_priority;
 let h_priority;
 
+// Web worker (genetics-worker.js)
 let worker;
 
 // Onload
@@ -23,40 +25,6 @@ $(function(){
 
     worker = new Worker('genetics-worker.js');
     worker.onmessage = processWorkerMessage;
-
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHHHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH', true);
-    // HHGHHH
-    // YHHHGH
-    // YGGXHH
-    // YHHHGH
-    //   =
-    // YHGHGH
-    // 2318 ms
-    // 1844 ms
-
-    // addCropByGene('HHYWGH');
-    // addCropByGene('XGHYHG');
-    // addCropByGene('HGYYGH', true);
 });
 
 // Helper function to dynamicaly create elements
@@ -111,6 +79,54 @@ function addCrop(updateCalc = true){
     }
     else{
         return false;
+    }
+}
+
+function importCrops(input){
+    let file = input.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = function() {
+        let inp = reader.result.split('\n');
+        if(inp[0] == 'genes'){
+            clearCrops();
+            for(let i = 1; i < inp.length; i++){
+                if(i < inp.length - 1){
+                    addCropByGene(inp[i]);
+                }
+                else{
+                    addCropByGene(inp[i], true);
+                }
+            }
+        }
+        else{
+            alert("File has wrong format");
+        }
+    };
+}
+
+function exportCrops(){
+    let file = new Blob(["genes\n" + Object.values(crops).join('\n')], {type: 'text/csv'});
+    let filename = 'genes.rgc';
+
+    // IE10+
+    if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    }
+    // Others
+    else {
+        let a = document.createElement("a");
+        let url = URL.createObjectURL(file);
+
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
     }
 }
 

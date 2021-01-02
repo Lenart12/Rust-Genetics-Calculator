@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="author" content="LKoos">
+    <meta name="author" content="LKokos">
     <meta name="description" content="A simple genetics calculator for the plants of Rust">
 
     <meta name="twitter:card" content="summary">
@@ -41,8 +41,6 @@
                     </a>
                 </h1>
                 <hr>
-                <a href="https://wgn.si/genetics" class="badge badge-primary">New: Shorter url - wgn.si/genetics</a>
-                <hr>
             </div>
         </div>
         <div class="row">
@@ -70,7 +68,8 @@
                     Click here if you would like to learn more about <a href="#genes">genes</a> or <a href="#crossbreeding">crossbreeding</a>. <br><br>
                     The result of the calculation will apear next to where you entered your crops. It will display what crops you need to crossbreed
                     and what you will get. If you see results with <span class="good gene">?</span> genes, it means that no crossbreeding will occur for
-                    that gene. Results with multiple genes in one column means there is multiple options of mutating a gene.
+                    that gene. Results with multiple genes in one column means there is multiple options of mutating a gene. <br><br>
+                    You can also load your genes from file or save your current genes by clicking the two buttons next to adding the crop.
                 </div>
                 <hr>
             </div>
@@ -80,6 +79,9 @@
                 <form id="add-form" onsubmit="addCrop(); return false;">
                     <input class="bg-panel" type="text" id="add-crop" pattern="^[YGHWXyghwx]{6}$" placeholder="Enter a new crop (eg. YGHWXG)">
                     <button type="submit" class="btn btn-success good">Add crop</button>
+                    <label class="btn btn-secondary" for="import-file" style="vertical-align: top">📄</label>
+                    <input type="file" id="import-file" onchange="importCrops(this)" accept=".rgc,text/csv" hidden>
+                    <button type="button" class="btn btn-secondary" onclick="exportCrops()">💾</button>
                 </form>
                 <hr>
                 <h3>Gene priority</h3>
