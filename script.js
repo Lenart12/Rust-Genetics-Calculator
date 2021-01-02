@@ -1,16 +1,18 @@
-// B=============D ~~~~
-
 // Array to store all the entered crops
-let crops = {}
+let crops = {};
+
+// Current crop id
 let cid = -1;
+
 let y_priority;
 let g_priority;
 let h_priority;
 
+// Web worker (genetics-worker.js)
 let worker;
 
 // Onload
-$(() => {
+$(function(){
     y_priority = parseFloat(document.getElementById('y-priority').value);
     g_priority = parseFloat(document.getElementById('g-priority').value);
     h_priority = parseFloat(document.getElementById('h-priority').value);
@@ -23,41 +25,7 @@ $(() => {
 
     worker = new Worker('genetics-worker.js');
     worker.onmessage = processWorkerMessage;
-
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('HYHWHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH');
-    // addCropByGene('WHHXGG');
-    // addCropByGene('HHGHHH');
-    // addCropByGene('HYHHHH');
-    // addCropByGene('YHHHGH');
-    // addCropByGene('YGGXHH', true);
-    // HHGHHH
-    // YHHHGH
-    // YGGXHH
-    // YHHHGH
-    //   =
-    // YHGHGH
-    // 2318 ms
-    // 1844 ms
-
-    // addCropByGene('HHYWGH');
-    // addCropByGene('XGHYHG');
-    // addCropByGene('HGYYGH', true);
-})
+});
 
 // Helper function to dynamicaly create elements
 function createElement(parent, type, text, classList){
@@ -79,7 +47,7 @@ function feedback() {
     http.send();
 
     document.getElementById('feedback-form').reset();
-    $('#feedbackCollapse').collapse('hide')
+    $('#feedbackCollapse').collapse('hide');
     let btn = document.getElementById('btn-feedback');
     btn.textContent = 'Thank you';
     btn.classList = 'btn btn-success';
@@ -88,7 +56,7 @@ function feedback() {
 // Form callback function which handles adding of a new crop
 function addCrop(updateCalc = true){
     let add_crop = document.getElementById('add-crop');
-
+    
     // Validate input
     let crop = add_crop.value.toUpperCase();
     if(crop.search(/^[YGHWXyghwx]{6}$/) > -1){
@@ -97,7 +65,7 @@ function addCrop(updateCalc = true){
         crops[++cid] = crop;
         add_crop.value = '';
         displayCrop(crop);
-
+        
         // Then update calculation
         if(updateCalc)
             calculateBest();
@@ -111,6 +79,54 @@ function addCrop(updateCalc = true){
     }
     else{
         return false;
+    }
+}
+
+function importCrops(input){
+    let file = input.files[0];
+    let reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = function() {
+        let inp = reader.result.split('\n');
+        if(inp[0] == 'genes'){
+            clearCrops();
+            for(let i = 1; i < inp.length; i++){
+                if(i < inp.length - 1){
+                    addCropByGene(inp[i]);
+                }
+                else{
+                    addCropByGene(inp[i], true);
+                }
+            }
+        }
+        else{
+            alert("File has wrong format");
+        }
+    };
+}
+
+function exportCrops(){
+    let file = new Blob(["genes\n" + Object.values(crops).join('\n')], {type: 'text/csv'});
+    let filename = 'genes.rgc';
+
+    // IE10+
+    if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(file, filename);
+    }
+    // Others
+    else {
+        let a = document.createElement("a");
+        let url = URL.createObjectURL(file);
+
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function() {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);  
+        }, 0); 
     }
 }
 
@@ -134,21 +150,21 @@ function displayCrop(crop){
     let li = createElement(list, 'li', '', 'mt-1');
     let del_btn = createElement(li, 'button', 'X', 'btn btn-del');
     let del_id = cid;
-    del_btn.addEventListener('click', ()=>{ deleteCrop(del_id); li.remove(); });
+    del_btn.addEventListener('click', function (){ deleteCrop(del_id); li.remove(); });
     for(let i = 0; i < 6; i++){
         let c = crop.charAt(i);
-        createElement(li, 'span', c, ( (c == 'X' || c == 'W') ? 'bad' : 'good' ) + ' gene'  )
+        createElement(li, 'span', c, (c == 'X' || c == 'W' ? 'bad' : 'good') + ' gene');
     }
 }
 
 
 // Function to reset the calculator
 function clearCrops(){
-    crops = {}
-    document.getElementById('crop-list').innerHTML = ''
+    crops = {};
+    document.getElementById('crop-list').innerHTML = '';
     document.getElementById('my-crops').hidden = true;
     document.getElementById('calculation').innerHTML = '';
-};
+}
 
 // Gene value enum
 const U = 0 << 0;
@@ -171,24 +187,24 @@ function processWorkerMessage(e){
     // If any good crossbreeding is found
     let calculation_div = document.getElementById('calculation');
     if(e.data.max_crop_parents.length > 0){
-        
+
         // Display parents
         createElement(calculation_div, 'h3', 'Crossbreed these', '');
-        e.data.max_crop_parents.forEach((crop) =>  {
+        e.data.max_crop_parents.forEach(function (crop) {
             for(let i = 0; i < 6; i++){
                 let c = crop.charAt(i);
-                createElement(calculation_div, 'span', c, ( (c == 'X' || c == 'W') ? 'bad' : 'good' ) + ' gene mt-1'  )
+                createElement(calculation_div, 'span', c, (c == 'X' || c == 'W' ? 'bad' : 'good') + ' gene mt-1');
             }
             createElement(calculation_div, 'br', '', '');
-        })
+        });
         
         // And the result
         createElement(calculation_div, 'br', '', '');
         createElement(calculation_div, 'h3', 'to get', '');
         for(let i = 0; i < 6; i++){
             let g = e.data.max_crop[i];
-            let bad = []
-            let good = []
+            let bad = [];
+            let good = [];
             if((g & W) > 0) bad.push('W');
             if((g & X) > 0) bad.push('X');
             if((g & Y) > 0) good.push('Y');
@@ -199,10 +215,10 @@ function processWorkerMessage(e){
             let gene_div = createElement(calculation_div, 'div', '', 'multi-gene mt-1');
 
             if(bad.length > 0){
-                createElement(gene_div, 'span', bad.join('<br>'), 'bad gene' + ((good.length > 0) ? ' gene-border-nb' : ''));
+                createElement(gene_div, 'span', bad.join('<br>'), 'bad gene' + (good.length > 0 ? ' gene-border-nb' : ''));
             }
             if(good.length > 0){
-                createElement(gene_div, 'span', good.join('<br>'), 'good gene' + ((bad.length > 0) ? ' gene-border-nt' : ''));
+                createElement(gene_div, 'span', good.join('<br>'), 'good gene' + (bad.length > 0 ? ' gene-border-nt' : ''));
             }
         }
         createElement(calculation_div, 'br', '', '');
@@ -211,8 +227,8 @@ function processWorkerMessage(e){
         createElement(calculation_div, 'h3', 'Best crop is', '');
         for(let i = 0; i < 6; i++){
             let g = e.data.max_crop[i];
-            let bad = []
-            let good = []
+            let bad = [];
+            let good = [];
             if((g & W) > 0) bad.push('W');
             if((g & X) > 0) bad.push('X');
             if((g & Y) > 0) good.push('Y');
@@ -223,10 +239,10 @@ function processWorkerMessage(e){
             let gene_div = createElement(calculation_div, 'div', '', 'multi-gene mt-1');
 
             if(bad.length > 0){
-                createElement(gene_div, 'span', bad.join('<br>'), 'bad gene' + ((good.length > 0) ? ' gene-border-nb' : ''));
+                createElement(gene_div, 'span', bad.join('<br>'), 'bad gene' + (good.length > 0 ? ' gene-border-nb' : ''));
             }
             if(good.length > 0){
-                createElement(gene_div, 'span', good.join('<br>'), 'good gene' + ((bad.length > 0) ? ' gene-border-nt' : ''));
+                createElement(gene_div, 'span', good.join('<br>'), 'good gene' + (bad.length > 0 ? ' gene-border-nt' : ''));
             }
         }
     }
@@ -235,19 +251,19 @@ function processWorkerMessage(e){
 // Function to calculate and display the best crop combination
 function calculateBest(){
     // Stop any running calculations
-    worker.postMessage('reject')
-
+    worker.postMessage('reject');
+    
     // Show calculation loading animation loading and delete old result
     document.getElementById('calc-loading').hidden = false;
     document.getElementById('calculation').innerHTML = '';
-
+    
     // Pack data for web worker
     let workData = {
         genes : Object.values(crops),
         y_priority : y_priority,
         g_priority : g_priority,
         h_priority : h_priority
-    }
+    };
 
     // Start calculation
     worker.postMessage(workData);

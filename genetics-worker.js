@@ -104,7 +104,7 @@ function crossbreed(parents){
         }
 
         // Find the dominant one
-        let max_gene = U
+        let max_gene = U;
         let max_crop_value = 0.6;
         for(let gene = 0; gene < 5; gene++){
             // Set new dominant gene if it is stronger
@@ -200,7 +200,7 @@ async function calculate(workData) {
     return {
         max_crop : max_crop,
         max_crop_parents : max_crop_parents
-    }
+    };
 }
 
 let calcPromise = null;
@@ -211,7 +211,7 @@ onmessage = function (e){
     if(typeof e.data === 'object'){
         // Start new calculation promise
         calcPromise = calculate(e.data);
-        calcPromise.then( (value) => {
+        calcPromise.then( function(value) {
             postMessage(value);
             calcPromise = null;
         });
@@ -222,7 +222,7 @@ onmessage = function (e){
             case 'reject':
                 // Reject calculation promise if exists
                 if(calcPromise != null){
-                    calcPromise.reject()
+                    calcPromise.reject();
                     calcPromise = null;
                 }
                 break;

@@ -21,7 +21,7 @@ session_start();
 // Save added gene in database
 if(count($_GET) == 1 && isset($_GET['genes']) && preg_match('/^[YGHWX]{6}$/', $_GET['genes'])){
     // Prevent logging of crops in staging branch
-    if(strpos($_SERVER['REQUEST_URI'], "staging") !== false){
+    if(strpos($_SERVER['REQUEST_URI'], "gensta") !== false){
         http_response_code(202); // HTTP: Accepted
         die();
     }
