@@ -108,7 +108,7 @@ function importCrops(input){
 
 function exportCrops(){
     let file = new Blob(["genes\n" + Object.values(crops).join('\n')], {type: 'text/csv'});
-    let filename = 'genes.rgc';
+    let filename = 'genes.txt';
 
     // IE10+
     if (window.navigator.msSaveOrOpenBlob) {
