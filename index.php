@@ -79,9 +79,9 @@
                 <form id="add-form" onsubmit="addCrop(); return false;">
                     <input class="bg-panel" type="text" id="add-crop" pattern="^[YGHWXyghwx]{6}$" placeholder="Enter a new crop (eg. YGHWXG)">
                     <button type="submit" class="btn btn-success good">Add crop</button>
-                    <label class="btn btn-secondary" for="import-file" style="vertical-align: top">📄</label>
-                    <input type="file" id="import-file" onchange="importCrops(this)" accept=".rgc,text/csv" hidden>
                     <button type="button" class="btn btn-secondary" onclick="exportCrops()">💾</button>
+                    <input type="file" id="import-file" onchange="importCrops(this)" accept="text/plain,.rgc,text/csv" hidden>
+                    <label class="btn btn-secondary" for="import-file" style="vertical-align: top">📄</label>
                 </form>
                 <hr>
                 <h3>Gene priority</h3>
