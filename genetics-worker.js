@@ -51,9 +51,9 @@ function evaluateCrop(crop, search_settings){
         value += 20 * ( 6 - Math.abs( dg ) );
         value += 20 * ( 6 - Math.abs( dh ) );
 
-        if(dy < 0 && dy + yh_count + gy_count + ygh_count > 0) value += 20;
-        if(dg < 0 && dg + gh_count + gy_count + ygh_count > 0) value += 20;
-        if(dh < 0 && dh + yh_count + gh_count + ygh_count > 0) value += 20;
+        if(dy < 0 && dy + yh_count + gy_count + ygh_count > 0) value += 15;
+        if(dg < 0 && dg + gh_count + gy_count + ygh_count > 0) value += 15;
+        if(dh < 0 && dh + yh_count + gh_count + ygh_count > 0) value += 15;
         value -= multi_choice * 2;
     }
     // Priority sliders
