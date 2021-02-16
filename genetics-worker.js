@@ -12,30 +12,71 @@ const GOOD = 0b11100;
 const BAD  = 0b00011;
 
 // Function to calculate the worth of the crop depending on its genes - simple one for now could be improved
-function evaluateCrop(crop, y_priority, g_priority, h_priority){
+function evaluateCrop(crop, search_settings){
     let value = 0;
+    // Desired gene
+    if (search_settings.settings_type == 0){
+        let y_count = 0;
+        let g_count = 0;
+        let h_count = 0;
+        let gy_count = 0;
+        let gh_count = 0;
+        let yh_count = 0;
+        let ygh_count = 0;
+        let multi_choice = 0;
 
-    // For each of the 6 genes
-    for(let i = 0; i < 6; i++){
-        // Evaluate each gene
-        let g = crop[i];
-        if(g & BAD){
-            value -= 1;
-        }
-        value += Math.max(
-            (g & Y) > 0 ? y_priority : 0,
-            (g & G) > 0 ? g_priority : 0,
-            (g & H) > 0 ? h_priority : 0
-        );
+        // For each of the 6 genes
+        for(let i = 0; i < 6; i++){
+            let g = crop[i];
 
-        // Add a penalty for multi-choice genes
-        let n = 0;
-        while(g != 0){
-            g = g & (g - 1);
-            n++;
+            if((g & W) > 0) value -= 50;
+            if((g & X) > 0) value -= 45;
+
+            switch(g){
+                case Y: y_count += 1; break;
+                case G: g_count += 1; break;
+                case H: h_count += 1; break;
+                case G | Y: gy_count += 1; multi_choice += 1; break;
+                case G | H: gh_count += 1; multi_choice += 1; break;
+                case Y | H: yh_count += 1; multi_choice += 1; break;
+                case Y | G | H: ygh_count += 1; multi_choice += 2; break;
+            }
         }
-        n = (n < 1) ? 1 : 0;
-        value -= 0.1 * (n - 1);
+        
+        let dy = y_count - search_settings.y_count;
+        let dg = g_count - search_settings.g_count;
+        let dh = h_count - search_settings.h_count;
+
+        value += 20 * ( 6 - Math.abs( dy ) );
+        value += 20 * ( 6 - Math.abs( dg ) );
+        value += 20 * ( 6 - Math.abs( dh ) );
+
+        if(dy < 0 && dy + yh_count + gy_count + ygh_count > 0) value += 20;
+        if(dg < 0 && dg + gh_count + gy_count + ygh_count > 0) value += 20;
+        if(dh < 0 && dh + yh_count + gh_count + ygh_count > 0) value += 20;
+        value -= multi_choice * 2;
+    }
+    // Priority sliders
+    else if(search_settings.settings_type == 1){
+        // For each of the 6 genes
+        for(let i = 0; i < 6; i++){
+            // Evaluate each gene
+            let g = crop[i];
+
+            if(g & W) value -= 1;
+            if(g & X) value -= 0.9;
+
+            value += Math.max(
+                (g & Y) > 0 ? search_settings.y_priority : 0,
+                (g & G) > 0 ? search_settings.g_priority : 0,
+                (g & H) > 0 ? search_settings.h_priority : 0
+            );
+    
+            // Add a penalty for multi-choice genes
+            if ( g & (g - 1) != 0) {
+                value -= 0.1;
+            }
+        }
     }
     return value;
 }
@@ -54,7 +95,7 @@ function* bwPowerSet(originalSet, maxDepth = -1) {
     // it shows by its bits (0 or 1) whether to include related element from the set or not.
     // For example, for the set {1, 2, 3} the binary number of 0b010 would mean that we need to
     // include only "2" to the current set.
-    for (let combinationIndex = 0; combinationIndex < numberOfCombinations; combinationIndex += 1) {
+    for (let combinationIndex = 1; combinationIndex < numberOfCombinations; combinationIndex += 1) {
         const subSet = [];
 
         // Get the depth by counting the number of set bits
@@ -157,7 +198,7 @@ function arrayToGeneString(arr){
 }
 
 // Main calculation function
-async function calculate(workData) {
+async function calculate(work_data) {
     // Find the best combination
     let max_crop_parents;
     let max_crop_value = -7;
@@ -165,9 +206,9 @@ async function calculate(workData) {
 
     // Change the gene as a string to a Uint8Array,
     // then use it to find the best seed in the input
-    for(let i = 0; i < workData.genes.length; i++){
-        let crop = workData.genes[i] = geneStringToArray(workData.genes[i]);
-        let value = evaluateCrop(crop, workData.y_priority, workData.g_priority, workData.h_priority);
+    for(let i = 0; i < work_data.genes.length; i++){
+        let crop = work_data.genes[i] = geneStringToArray(work_data.genes[i]);
+        let value = evaluateCrop(crop, work_data.search_settings);
         if(value > max_crop_value){
             max_crop_value = value;
             max_crop_parents = [];
@@ -176,9 +217,9 @@ async function calculate(workData) {
     }
     
     // For every possible combination
-    for(parents of bwPowerSet(workData.genes, 8)){
+    for(parents of bwPowerSet(work_data.genes, 8)){
         let crop = crossbreed(parents);
-        let value = evaluateCrop(crop, workData.y_priority, workData.g_priority, workData.h_priority);
+        let value = evaluateCrop(crop, work_data.search_settings);
     
         // console.log(parents);
         // console.log(crop);

@@ -39,9 +39,19 @@ rect {
   fill: #ce422b;
 }
 
-input[type=text]{
+.input-dark{
     color: #a1a09f;
     border: solid 1px white;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid #5e5d5b;
+}
+
+.nav-tabs .nav-link.active {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
 }
 
 #crop-list{

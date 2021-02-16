@@ -4,18 +4,24 @@ let crops = {};
 // Current crop id
 let cid = -1;
 
-let y_priority;
-let g_priority;
-let h_priority;
+// Current work settings 
+let search_settings = {
+    settings_type : 0 // 0 => 'desired-gene' or 1 => 'priority-sliders'
+};
 
 // Web worker (genetics-worker.js)
 let worker;
 
 // Onload
 $(function(){
-    y_priority = parseFloat(document.getElementById('y-priority').value);
-    g_priority = parseFloat(document.getElementById('g-priority').value);
-    h_priority = parseFloat(document.getElementById('h-priority').value);
+    // Initialize values
+    search_settings.y_priority = parseFloat(document.getElementById('y-priority').value);
+    search_settings.g_priority = parseFloat(document.getElementById('g-priority').value);
+    search_settings.h_priority = parseFloat(document.getElementById('h-priority').value);
+
+    search_settings.y_count = parseFloat(document.getElementById('y-count').value);
+    search_settings.g_count = parseFloat(document.getElementById('g-count').value);
+    search_settings.h_count = parseFloat(document.getElementById('h-count').value);
 
     // Make sure browser has support for web workers
     if(!window.Worker){
@@ -25,6 +31,9 @@ $(function(){
 
     worker = new Worker('genetics-worker.js');
     worker.onmessage = processWorkerMessage;
+
+    // Initialize all tooltips
+    // $('[data-toggle="tooltip"]').tooltip()
 });
 
 // Helper function to dynamicaly create elements
@@ -68,7 +77,7 @@ function addCrop(updateCalc = true){
         
         // Then update calculation
         if(updateCalc)
-            calculateBest();
+            settingsChanged();
 
         // I am interested if this is even being used and what is the statistics of plants being calculated, hope
         // you don't mind if I store these crops in a database. DM me if you are interested getting the data.
@@ -82,6 +91,7 @@ function addCrop(updateCalc = true){
     }
 }
 
+// Function to import list of crops from a file
 function importCrops(input){
     let file = input.files[0];
     let reader = new FileReader();
@@ -106,6 +116,7 @@ function importCrops(input){
     };
 }
 
+// Function to export crops to a file
 function exportCrops(){
     let file = new Blob(["genes\n" + Object.values(crops).join('\n')], {type: 'text/csv'});
     let filename = 'genes.txt';
@@ -133,7 +144,7 @@ function exportCrops(){
 // Button callback to delete added crop
 function deleteCrop(crop_id){
     delete crops[crop_id];
-    calculateBest();
+    settingsChanged();
 }
 
 // Helper function for debugging
@@ -161,6 +172,9 @@ function displayCrop(crop){
 // Function to reset the calculator
 function clearCrops(){
     crops = {};
+
+    worker.postMessage('reject');
+
     document.getElementById('crop-list').innerHTML = '';
     document.getElementById('my-crops').hidden = true;
     document.getElementById('calculation').innerHTML = '';
@@ -248,23 +262,59 @@ function processWorkerMessage(e){
     }
 }
 
+// Function callback when calculation parameters are changed
+
+function settingsChanged(force = false) {
+    search_settings.y_priority = parseFloat(document.getElementById('y-priority').value);
+    search_settings.g_priority = parseFloat(document.getElementById('g-priority').value);
+    search_settings.h_priority = parseFloat(document.getElementById('h-priority').value);
+
+    search_settings.y_count = parseFloat(document.getElementById('y-count').value);
+    search_settings.g_count = parseFloat(document.getElementById('g-count').value);
+    search_settings.h_count = parseFloat(document.getElementById('h-count').value);
+
+    if(Object.values(crops).length == 0) return;
+
+    if(search_settings.settings_type == 0 && (search_settings.y_count + search_settings.g_count + search_settings.h_count) != 6) {
+        let calculation_div = document.getElementById('calculation');
+        calculation_div.innerHTML = '';
+
+        createElement(calculation_div, 'span', 'Count needs to add to 6!', 'badge rounded-pill bg-danger bad mx-auto mt-5 d-block');
+        return;
+    }
+
+    if(Object.values(crops).length > 9 && !force) {
+        let calculation_div = document.getElementById('calculation');
+        calculation_div.innerHTML = '';
+
+        let btn = createElement(calculation_div, 'button', 'Start calculation', 'btn btn-success good mx-auto mt-5 d-block');
+        btn.addEventListener('click', function (){ calculateBest(true) });
+        return;
+    }
+
+    calculateBest();
+}
+
 // Function to calculate and display the best crop combination
 function calculateBest(){
     // Stop any running calculations
     worker.postMessage('reject');
+
+    if( Object.values(crops).length  > 31 ) {
+        alert("Too many crops! (" + Object.values(crops).length + "/31)");
+        return;
+    }
     
     // Show calculation loading animation loading and delete old result
     document.getElementById('calc-loading').hidden = false;
     document.getElementById('calculation').innerHTML = '';
     
     // Pack data for web worker
-    let workData = {
+    let work_data = {
         genes : Object.values(crops),
-        y_priority : y_priority,
-        g_priority : g_priority,
-        h_priority : h_priority
+        search_settings : search_settings,
     };
 
     // Start calculation
-    worker.postMessage(workData);
+    worker.postMessage(work_data);
 }
