@@ -70,6 +70,12 @@ function addCrop(updateCalc = true){
     let crop = add_crop.value.toUpperCase();
     if(crop.search(/^[YGHWXyghwx]{6}$/) > -1){
 
+        // Prevent duplicates
+        if (Object.values(crops).indexOf(crop) != -1) {
+            alert(crop + " is already added to your crops!");
+            return;
+        }
+
         // Store and display crop
         crops[++cid] = crop;
         add_crop.value = '';
