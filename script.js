@@ -149,8 +149,12 @@ function exportCrops(){
 
 // Button callback to delete added crop
 function deleteCrop(crop_id){
-    delete crops[crop_id];
-    settingsChanged();
+    if(Object.values(crops).length == 1)
+        clearCrops();
+    else {
+        delete crops[crop_id];
+        settingsChanged();
+    }
 }
 
 // Helper function for debugging
