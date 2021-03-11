@@ -230,16 +230,16 @@
                 <!-- How to crossbreed -->
                 <h2 id="crossbreeding">Crossbreeding</h2>
                 <p>
-                    About 20 minutes after planting every crop will enter a crossbreading stage. When it enteres this stage, the plant will look
+                    About 20 minutes after planting every crop will enter a crossbreeding stage. When it enteres this stage, the plant will look
                     at its <strong>neighbour plants in the planter</strong> (not including itself) for any genes that it can recive.
-                    The crossbreading stage will also be indicated when looking at the plant under the stage category.
+                    The crossbreeding stage will also be indicated when looking at the plant under the stage category.
                 </p>
                 <p>
                     If you are interesed in a detailed explanation of crossbreeding I sugest watching <a href="https://www.youtube.com/watch?v=WQ0ixceBZwA">this video</a>
                     (or look at the source code on <a href="https://github.com/Lenart12/Rust-Genetics-Calculator/blob/afaec022224cf14aaa96af494ba84429df418f61/genetics-worker.js#L86">Github</a>),
                     but in short when crossbreeding occurs, the crop will go looking for each of the six genes of neighbours and
                     select the one that was found the most times for that position (with negative ones taking priority). If all genes
-                    had the same amount of occurances, no crossbreading will occur for that gene.
+                    had the same amount of occurances, no crossbreeding will occur for that gene.
                 </p>
 
                 <hr>
@@ -290,8 +290,8 @@
                 <!-- Special thanks -->
                 <small class="text-muted">Special thanks to Clark for his support!</small><br>
 
-                <!-- Copyright -->
-                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2021 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a><br>
+                <!-- Copyright & Contact -->
+                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2021 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a> - Discord LKokos#5728<br>
 
                 <!-- Disclamer -->
                 <small class="text-muted">By using this website you consent to using cookies on this site. The site also tracks parts of your http request and the seeds you enter.</small>
