@@ -249,7 +249,7 @@
             <div class="col-md-10 offset-md-1 text-center">
                 <!-- Feedback collapse control -->
                 <p>
-                    <a class="btn btn-primary" id="btn-feedback" data-toggle="collapse" href="#feedbackCollapse" aria-expanded="false" aria-controls="feedbackCollapse">
+                    <a class="btn btn-primary" id="btn-feedback" role="button" data-bs-toggle="collapse" href="#feedbackCollapse" aria-expanded="false" aria-controls="feedbackCollapse">
                         Leave feedback
                     </a>
                 </p>
