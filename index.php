@@ -10,7 +10,7 @@
     <meta name="description" content="A simple genetics calculator for the plants of Rust">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:site" content="@_LKoos">
+    <meta name="twitter:site" content="@_LKokos">
     <meta name="twitter:title" content="Rust Genetics Calculator">
     <meta name="twitter:description" content="A simple genetics calculator for the plants of Rust">
     <meta name="twitter:image" content="http://wigaun.eu.org/genetics/rust.jpg">
