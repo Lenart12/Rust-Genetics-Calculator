@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */ 
+
 // Array to store all the entered crops
 let crops = {};
 
@@ -50,7 +52,7 @@ function feedback() {
     let text = document.getElementById('text').value;
     let contact = document.getElementById('contact').value;
     
-    let http = new XMLHttpRequest()
+    let http = new XMLHttpRequest();
     let url = 'feedback.php?text=' + encodeURIComponent(text) + '&contact=' + encodeURIComponent(contact);
     http.open('GET', url);
     http.send();
@@ -88,7 +90,7 @@ function addCrop(updateCalc = true){
         // I am interested if this is even being used and what is the statistics of plants being calculated, hope
         // you don't mind if I store these crops in a database. DM me if you are interested getting the data.
         // I am doing this for free so I would ask you kindly not to abuse this endpoint by sending bullshit data. Thanks
-        let http = new XMLHttpRequest()
+        let http = new XMLHttpRequest();
         http.open('GET', 'statistics.php?genes=' + crop);
         http.send();
     }
@@ -298,7 +300,7 @@ function settingsChanged(force = false) {
         calculation_div.innerHTML = '';
 
         let btn = createElement(calculation_div, 'button', 'Start calculation', 'btn btn-success good mx-auto mt-5 d-block');
-        btn.addEventListener('click', function (){ calculateBest(true) });
+        btn.addEventListener('click', function (){ calculateBest(true); });
         return;
     }
 

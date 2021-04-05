@@ -34,7 +34,7 @@
                         <span class="rust p-2">Rust Genetics Calculator</span>
                     </a>
                 </h1>
-
+                <h3><a href="discord" class="link-danger">Join the new Discord server of this app</a></h3>
                 <hr>
             </div>
         </div>
@@ -260,7 +260,7 @@
                         <!-- Text area -->
                         <div class="form-group">
                           <label for="text">Feedback</label>
-                          <textarea class="form-control" name="text" id="text" rows="6" placeholder="Your feedback content" required></textarea>
+                          <textarea class="form-control" name="text" id="text" rows="6" placeholder="Leave your feedback here or send it in the Discord server - link below" required></textarea>
                         </div>
 
                         <!-- Contact -->
@@ -291,7 +291,7 @@
                 <small class="text-muted">Special thanks to Clark for his support!</small><br>
 
                 <!-- Copyright & Contact -->
-                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2021 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a> - Discord LKokos#5728<br>
+                Made by <a href="https://steamcommunity.com/id/LKokos/">LKokos</a> © 2021 - <a href="/">Homepage</a> - <a href="https://github.com/Lenart12/Rust-Genetics-Calculator">Github</a> - <a href="discord">Discord</a><br>
 
                 <!-- Disclamer -->
                 <small class="text-muted">By using this website you consent to using cookies on this site. The site also tracks parts of your http request and the seeds you enter.</small>

@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */ 
+
 // Gene value enum
 const U = 0 << 0;
 const W = 1 << 0;
@@ -217,7 +219,7 @@ async function calculate(work_data) {
     }
     
     // For every possible combination
-    for(parents of bwPowerSet(work_data.genes, 8)){
+    for(let parents of bwPowerSet(work_data.genes, 8)){
         let crop = crossbreed(parents);
         let value = evaluateCrop(crop, work_data.search_settings);
     
@@ -272,4 +274,4 @@ onmessage = function (e){
                 break;
         }
     }
-}
+};
