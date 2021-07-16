@@ -106,7 +106,7 @@ function importCrops(input){
     reader.readAsText(file);
 
     reader.onload = function() {
-        let inp = reader.result.split('\n');
+        let inp = reader.result.split('\n').map(s => s.trim());
         if(inp[0] == 'genes'){
             clearCrops();
             for(let i = 1; i < inp.length; i++){
@@ -119,7 +119,7 @@ function importCrops(input){
             }
         }
         else{
-            alert("File has wrong format");
+            alert("File has wrong format:\nFirst line must be \"genes\" then list of genes row by row");
         }
     };
 }
