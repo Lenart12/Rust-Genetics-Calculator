@@ -149,6 +149,16 @@ function exportCrops(){
     }
 }
 
+// Function to rename the crop list
+function renameTitle() {
+    const newTitle = prompt("Enter new name for these crops");
+    if (!newTitle) return;
+
+    document.getElementById('crop-title').innerText = newTitle;
+    document.title = `${newTitle} - Rust Genetics Calculator`;
+
+}
+
 // Button callback to delete added crop
 function deleteCrop(crop_id){
     if(Object.values(crops).length == 1)
