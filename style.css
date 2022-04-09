@@ -64,8 +64,10 @@ rect {
     padding: 0 0.2em;
     margin-right: 1em;
 }
-
 .btn-del:hover{
+    background-color: #3d3d3d;
+}
+.btn-del-h:hover{
     background-color: #dc3545;
 }
 

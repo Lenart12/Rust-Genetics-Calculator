@@ -149,8 +149,9 @@
                 <!-- List of crops - hidden on default -->
                 <div id="my-crops" hidden>
                     <hr>
-                    <h3 class="d-inline-block">My crops</h3>
-                    <button type="button" class="btn btn-del mb-2 ml-3" onclick="if(confirm('Are you sure you want to clear all current crops'))clearCrops()">Clear</button>
+                    <h3 class="d-inline-block" id="crop-title">My crops</h3>
+                    <button type="button" class="btn btn-del mb-2 ml-3" onclick="renameTitle()" title="Rename this list">📑</button>
+                    <button type="button" class="btn btn-del btn-del-h mb-2 ml-0" onclick="if(confirm('Are you sure you want to clear all current crops'))clearCrops()">Clear</button>
                     <ul id="crop-list" class="mt-2">
     
                     </ul>
