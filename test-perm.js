@@ -1,5 +1,5 @@
 
-https://mathsanew.com/articles/algorithm_generating_combinations.pdf
+// https://mathsanew.com/articles/algorithm_generating_combinations.pdf
 function* generateAll_recursive(input_arr) {
     const a = input_arr;
     const n = a.length;
@@ -21,7 +21,7 @@ function* generateAll_recursive(input_arr) {
     }
 }
 
-https://mathsanew.com/articles/algorithm_generating_combinations.pdf
+// https://mathsanew.com/articles/algorithm_generating_combinations.pdf
 function* generateAll_iterative(input_arr) {
     const a = input_arr;
     const n = a.length;

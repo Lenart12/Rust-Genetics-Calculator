@@ -322,11 +322,6 @@ function calculateBest(){
     // Stop any running calculations
     worker.postMessage('reject');
 
-    if( Object.values(crops).length  > 31 ) {
-        alert("Too many crops! (" + Object.values(crops).length + "/31)");
-        return;
-    }
-    
     // Show calculation loading animation loading and delete old result
     document.getElementById('calc-loading').hidden = false;
     document.getElementById('calculation').innerHTML = '';

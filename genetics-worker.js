@@ -83,47 +83,41 @@ function evaluateCrop(crop, search_settings){
     return value;
 }
 
-// Taken from https://github.com/trekhleb/javascript-algorithms/tree/master/src/algorithms/sets/power-set
-// and turned into a generator and modified to include max depth - cant crosbreed more than 8 at a time.
-function* bwPowerSet(originalSet, maxDepth = -1) {
-    if(maxDepth == -1) maxDepth = originalSet.length;
+// https://mathsanew.com/articles/algorithm_generating_combinations.pdf
+function* generateAll_iterative(input_arr) {
+    const a = input_arr;
+    const n = a.length;
+    const c = [];
 
-    // We will have 2^n possible combinations (where n is a length of original set).
-    // It is because for every element of original set we will decide whether to include
-    // it or not (2 options for each set element).
-    const numberOfCombinations = 2 ** originalSet.length;
-
-    // Each number in binary representation in a range from 0 to 2^n does exactly what we need:
-    // it shows by its bits (0 or 1) whether to include related element from the set or not.
-    // For example, for the set {1, 2, 3} the binary number of 0b010 would mean that we need to
-    // include only "2" to the current set.
-    for (let combinationIndex = 1; combinationIndex < numberOfCombinations; combinationIndex += 1) {
-        const subSet = [];
-
-        // Get the depth by counting the number of set bits
-        let depth = 0;
-        let depth_c = combinationIndex;
-        while(depth_c != 0){
-            depth_c = depth_c & (depth_c - 1);
-            depth++;
-            if(depth > maxDepth) break;
-        }
-
-        if(depth <= maxDepth){
-            for (let setElementIndex = 0; setElementIndex < originalSet.length; setElementIndex += 1) {
-                // Decide whether we need to include current element into the subset or not.
-                if (combinationIndex & (1 << setElementIndex)) {
-                    subSet.push(originalSet[setElementIndex]);
-                }
+    function* generate(k) {
+        let I = []
+        let r;
+        I[0] = 0;
+        r = k;
+        while (r <= k) {
+            if (r == 0) {
+                yield c.slice(0, k);
+                r = r + 1;
+                continue;
             }
-    
-            // Add current subset to the list of all subsets.
-            yield subSet;
-            // subSets.push(subSet);
-        }        
+
+            if (I[k - r] < n - r + 1) {
+                c[k - r] = a[I[k - r]];
+                if (r > 1)
+                    I[k - (r - 1)] = I[k - r] + 1;
+                I[k - r]++;
+                r = r - 1;
+            }
+            else {
+                r = r + 1;
+            }
+        }
     }
 
-    return;
+    for (let i = 1; i <= 8; i++) {
+        // console.log('Testing seeds of length',i)
+        yield* generate(i);
+    }
 }
 
 // Crossbreeding function that takes an array of parent crops and calculates the child
@@ -219,7 +213,7 @@ async function calculate(work_data) {
     }
     
     // For every possible combination
-    for(let parents of bwPowerSet(work_data.genes, 8)){
+    for(let parents of generateAll_iterative(work_data.genes)){
         let crop = crossbreed(parents);
         let value = evaluateCrop(crop, work_data.search_settings);
     
@@ -229,6 +223,7 @@ async function calculate(work_data) {
     
         // Set better crop if it is better or if it is equal and has less parents
         if(value > max_crop_value || (value == max_crop_value && parents.length < max_crop_parents.length) ){
+            // console.log('New best crop', max_crop, value, 'with parents of', parents)
             max_crop_value = value;
             max_crop_parents = parents;
             max_crop = crop;
