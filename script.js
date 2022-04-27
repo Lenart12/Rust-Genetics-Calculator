@@ -34,6 +34,8 @@ $(function(){
     worker = new Worker('genetics-worker.js');
     worker.onmessage = processWorkerMessage;
 
+    loadLocalCrops();
+
     // Initialize all tooltips
     // $('[data-toggle="tooltip"]').tooltip()
 });
@@ -82,6 +84,7 @@ function addCrop(updateCalc = true){
         crops[++cid] = crop;
         add_crop.value = '';
         displayCrop(crop);
+        saveLocalCrops();
         
         // Then update calculation
         if(updateCalc)
@@ -122,6 +125,34 @@ function importCrops(input){
             alert("File has wrong format:\nFirst line must be \"genes\" then list of genes row by row");
         }
     };
+}
+
+// Load crops saved in local storage
+function loadLocalCrops() {
+    if (! window.localStorage) return;
+
+    if (! window.localStorage.getItem('crops')) {
+        clearCrops();
+        return;
+    }
+
+    let inp = window.localStorage.getItem('crops').split('\n').map(s => s.trim());
+    clearCrops();
+    for(let i = 0; i < inp.length; i++){
+        if(i < inp.length - 1){
+            addCropByGene(inp[i]);
+        }
+        else{
+            addCropByGene(inp[i], true);
+        }
+    }
+}
+
+// Save current crops to local storage
+function saveLocalCrops() {
+    if (! window.localStorage) return;
+
+    window.localStorage.setItem('crops', Object.values(crops).join('\n'));
 }
 
 // Function to export crops to a file
@@ -165,6 +196,7 @@ function deleteCrop(crop_id){
         clearCrops();
     else {
         delete crops[crop_id];
+        saveLocalCrops();
         settingsChanged();
     }
 }
@@ -194,6 +226,7 @@ function displayCrop(crop){
 // Function to reset the calculator
 function clearCrops(){
     crops = {};
+    saveLocalCrops();
 
     worker.postMessage('reject');
 
